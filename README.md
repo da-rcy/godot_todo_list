@@ -6,3 +6,7 @@ You can double click on any list item to change the text, you can also right cli
 
 From the right click menu you can also delete any item.
 Keep this docked wherever you like, it will generally remember where you last docked it and any todo item does save when you close godot.
+
+To Install:
+Simply unzip everything into a "todo_list" folder and move this folder into your Godot addon folder:
+res://addons/todo_list
