@@ -42,15 +42,24 @@ func _create_item(text: String, is_done: bool = false) -> Control:
 	container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	
 	var label := RichTextLabel.new()
-	label.text = text
 	label.bbcode_enabled = true
 	label.fit_content = true
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.mouse_filter = Control.MOUSE_FILTER_PASS
-	label.set_meta("done", false)
+	label.set_meta("done", is_done)
 	label.set_meta("raw_text", text)
 	container.add_child(label)
+	
+	if is_done:
+		label.text = ""
+		label.append_text("[i][s]" + text + "[/s][/i]")
+		var text_colour := Color(0.458, 0.483, 0.496, 1.0)
+		label.set("theme_override_colors/default_color", text_colour)
+	else:
+		label.text = text
+		var text_colour := Color(0.839, 0.839, 0.839, 1.0)
+		label.set("theme_override_colors/default_color", text_colour)
 	
 	var menu := PopupMenu.new()
 	menu.add_item("Edit")
@@ -113,12 +122,18 @@ func _mark_done(label: RichTextLabel) -> void:
 		label.clear()
 		label.append_text(label.get_meta("raw_text", ""))
 		label.set_meta("done", false)
+		var text_colour := Color(0.839, 0.839, 0.839, 1.0)
+		label.set("theme_override_colors/default_color", text_colour)
+		_save_todos()
 	else:
-		var raw := label.text
+		var raw = label.get_meta("raw_text")
 		label.clear()
 		label.append_text("[i][s]" + raw + "[/s][/i]")
 		label.set_meta("raw_text", raw)
 		label.set_meta("done", true)
+		var text_colour := Color(0.458, 0.483, 0.496, 1.0)
+		label.set("theme_override_colors/default_color", text_colour)
+		_save_todos()
 
 func _save_todos() -> void:
 	var todos = []
